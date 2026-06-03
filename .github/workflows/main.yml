@@ -2,7 +2,7 @@ name: Build Samsung Remote APK
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main, master ]
   workflow_dispatch: # tombol manual build di GitHub
 
 jobs:
@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       # ─── 3. Setup JDK 17 ─────────────────────────────────────────
       - name: Setup JDK 17
@@ -64,4 +63,3 @@ jobs:
           name: SamsungRemote-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
-
