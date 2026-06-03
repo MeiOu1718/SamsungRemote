@@ -36,9 +36,18 @@ jobs:
       - name: Install Node dependencies
         run: npm install --legacy-peer-deps
 
-      # ─── 6. Set permissions Gradle ────────────────────────────────
+      # ─── 6. Cek & Set permissions Gradle (Dibuat Lebih Aman) ──────
       - name: Make Gradle executable
-        run: chmod +x android/gradlew
+        run: |
+          if [ -f "android/gradlew" ]; then
+            chmod +x android/gradlew
+          elif [ -f "gradlew" ]; then
+            chmod +x gradlew
+          else
+            echo "Peringatan: gradlew tidak ditemukan di root maupun folder android/. Mencoba generate via CLI..."
+            npx react-native android
+            if [ -f "android/gradlew" ]; then chmod +x android/gradlew; fi
+          fi
 
       # ─── 7. Cache Gradle ──────────────────────────────────────────
       - name: Cache Gradle
@@ -53,7 +62,9 @@ jobs:
       # ─── 8. Build APK Debug ───────────────────────────────────────
       - name: Build Debug APK
         run: |
-          cd android
+          if [ -d "android" ]; then
+            cd android
+          fi
           ./gradlew assembleDebug --no-daemon
 
       # ─── 9. Upload APK sebagai artifact ───────────────────────────
@@ -61,5 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SamsungRemote-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
