@@ -34,7 +34,7 @@ jobs:
 
       # ─── 5. Install dependencies ──────────────────────────────────
       - name: Install Node dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # ─── 6. Set permissions Gradle ────────────────────────────────
       - name: Make Gradle executable
